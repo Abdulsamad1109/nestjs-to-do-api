@@ -1,4 +1,5 @@
-import { IsEmail, IsString } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { Roles } from "src/auth/roles.enum";
 
 export class CreateUserDto {
 
@@ -13,4 +14,10 @@ export class CreateUserDto {
 
     @IsString()
     password: string
+
+    @IsArray()
+    @ArrayNotEmpty()
+    @IsNotEmpty()
+    @IsEnum(Roles, {each: true})
+    roles: Roles[]
 }
