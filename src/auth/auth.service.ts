@@ -1,34 +1,33 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateSigninDto } from './dto/create-signin.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
 
   constructor( 
-  @InjectRepository(User) 
-  private userRepository: Repository<User>,
+  private userService: UserService,
   private jwtService: JwtService
   ){}
 
-  async create(authDto: CreateSigninDto) {
+  async validateUser(email: string, password: string) {
 
-    const {email, password} = authDto
     // checks if the email exists in the DB
-    const user = await this.userRepository.findOneBy({email})
-    if(!user) throw new UnauthorizedException('invalid credentials')
+    const user = await this.userService.findOneByEmail(email)
 
-    // verify password before signing JWT
-    const isPassword = await bcrypt.compare(password, user.password)
-    if(!isPassword) throw new UnauthorizedException('invalid credentials')
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const { password, ...result } = user;
+      return result;
+    }
+    
+    throw new UnauthorizedException('Invalid credentials');
       
-    const payload = {email: user.email, sub: user.id, roles: user.roles}
-    return { accessToken: this.jwtService.sign(payload) }
- 
+  }
+
+  async signin(user: any): Promise<{access_token: string}> {
+    const payload = { email: user.email, sub: user.id, roles: user.roles };
+    return { access_token: this.jwtService.sign(payload) };
   }
 
 }

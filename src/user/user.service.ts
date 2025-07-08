@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt'
@@ -38,6 +38,10 @@ export class UserService {
       console.error;
       throw error;
     } 
+  }
+  
+  async findOneByEmail(email: string){
+    return await this.userRepository.findOneBy({email})
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
