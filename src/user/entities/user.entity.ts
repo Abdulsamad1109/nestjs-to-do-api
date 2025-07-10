@@ -1,5 +1,6 @@
 import { Roles } from "src/auth/roles.enum";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Todo } from "src/todo/entities/todo.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('user')
 export class User {
@@ -20,5 +21,8 @@ export class User {
 
     @Column( {type: "enum", enum: Roles, array: true, default: [Roles.USER]} )
     roles: Roles[]
+
+    @OneToMany(() => Todo, (todo) => todo.user)
+    todos: Todo[];
 }
 

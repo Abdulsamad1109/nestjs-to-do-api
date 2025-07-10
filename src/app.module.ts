@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { Todo } from './todo/entities/todo.entity';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { AuthModule } from './auth/auth.module';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        entities: [User],
+        entities: [User, Todo],
         synchronize: true,
       })
     }),
