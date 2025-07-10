@@ -1,5 +1,5 @@
 import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
-import { Roles } from "src/auth/roles.enum";
+import { Role } from "src/auth/roles.enum";
 
 export class CreateUserDto {
 
@@ -18,6 +18,6 @@ export class CreateUserDto {
     @IsArray()
     @ArrayNotEmpty()
     @IsNotEmpty()
-    @IsEnum(Roles, {each: true})
-    roles: Roles[]
+    @IsEnum(Role, {each: true})
+    role: Role[]
 }

@@ -24,13 +24,9 @@ export class TodoService {
         ...createTodoDto,
         user,
       }
-      const createdTodo = await this.todoRepository.save(newTodo)
+      await this.todoRepository.save(newTodo)
 
-      return {
-        ...createdTodo,
-        userId: createdTodo.user.id, // i want only the user ID in the response
-        user: undefined // i did this because i dont want the whole user object/entity in the response
-      }
+      return 'todo created successfully'
 
     } catch (error) {
       console.error(error)
