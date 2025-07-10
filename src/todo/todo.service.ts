@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -50,20 +50,32 @@ export class TodoService {
 
   }
 
-  // async update(id: string, updateTodoDto: UpdateTodoDto) {
-  //   try {
-  //         // checks if the user exist
-  //         const user = await this.todoRepository.findOneBy({id});
-  //         if(!user) throw new NotFoundException(`user with id ${id} not found`);
-    
-  //         await this.todoRepository.update(user.id, updateTodoDto);
-  //         return `user with id ${id} updated succesfully`;
+  async updateTodo(todoId: number, userId: number, updateTodoDto: UpdateTodoDto) {
+    try {
+          // find the todo by its id
+          const todo = await this.todoRepository.findOne({
+            where: {id: todoId},
+            relations: ['user']
+          })
+
+          // verify that the todo belongs to the logged in user
+          if (!todo) {
+            throw new NotFoundException('Todo not found');
+          }
+
+          if (todo.user.id !== userId) {
+            throw new ForbiddenException('You are not allowed to update this todo');
+          }
+
+          Object.assign(todo, updateTodoDto);
+          return await this.todoRepository.save(todo);
           
-  //       } catch (error) {
-  //         console.error;
-  //         throw error;
-  //       }
-  // }
+          
+        } catch (error) {
+          console.error;
+          throw error;
+        }
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} todo`;
