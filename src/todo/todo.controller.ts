@@ -50,8 +50,14 @@ export class TodoController {
     return this.todoService.updateTodo(todoId, userId, updateTodoDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.todoService.remove(+id);
-  // }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete(':id')
+  @Roles(Role.USER, Role.ADMIN)
+  remove(
+  @Param('id') todoId: number,
+  @Req() req: any ) {
+    const userId = req.user.userId
+    return this.todoService.remove(todoId, userId);
+  }
 }

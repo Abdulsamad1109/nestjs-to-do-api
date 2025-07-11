@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { log } from 'console';
 
 @Injectable()
 export class TodoService {
@@ -58,11 +59,10 @@ export class TodoService {
             relations: ['user']
           })
 
-          // verify that the todo belongs to the logged in user
-          if (!todo) {
-            throw new NotFoundException('Todo not found');
-          }
+          // verify that the todo exist
+          if (!todo) throw new NotFoundException('Todo not found');
 
+          // verify if the todo belongs to the logged in user
           if (todo.user.id !== userId) {
             throw new ForbiddenException('You are not allowed to update this todo');
           }
@@ -77,7 +77,28 @@ export class TodoService {
         }
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} todo`;
-  // }
+  async remove(todoId: number, userId: number) {
+    try {
+        // find the todo by its id
+        const todo = await this.todoRepository.findOne({
+          where: {id: todoId},
+          relations: ['user']
+          })
+          // verify if the todo exist
+        if (!todo) throw new NotFoundException('Todo not found');
+
+        // verify if the todo belongs to the logged in user
+        if (todo.user.id !== userId) {
+            throw new ForbiddenException('You are not allowed to delete this todo');
+          }
+
+        const deletedTodo = await this.todoRepository.remove(todo)
+        console.log(todo)
+        return deletedTodo
+
+    } catch (error) {
+      console.error
+      throw error
+    }
+  }
 }
