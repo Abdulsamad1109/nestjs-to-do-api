@@ -68,7 +68,8 @@ export class TodoService {
           }
 
           Object.assign(todo, updateTodoDto);
-          return await this.todoRepository.save(todo);
+          await this.todoRepository.save(todo);
+          return 'todo updated sucessfully'
           
           
         } catch (error) {
@@ -93,8 +94,7 @@ export class TodoService {
           }
 
         const deletedTodo = await this.todoRepository.remove(todo)
-        console.log(todo)
-        return deletedTodo
+        return 'todo deleted sucessfully'
 
     } catch (error) {
       console.error
