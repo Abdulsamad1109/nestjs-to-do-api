@@ -27,7 +27,7 @@ import { Todo } from './todo/entities/todo.entity';
         synchronize: true,
       })
     }),
-  UserModule, 
+  UserModule,
   TodoModule, AuthModule
 ],
   controllers: [AppController],
