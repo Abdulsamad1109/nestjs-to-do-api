@@ -18,13 +18,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
+    
     // fetch other user properties after validating the JWT
     const user = await this.userService.findOne(payload.sub)
 
     // return the full user object without paassword
-    return { 
-    id: user.id,
- 
-  };
+    return {  id: user.id };
+
   }
 }
