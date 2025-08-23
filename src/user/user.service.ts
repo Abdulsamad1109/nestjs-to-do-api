@@ -23,11 +23,14 @@ export class UserService {
     }
   }
 
-    async fetchProfile(req: any) {
-    const userProfile = await this.userRepository.findOneBy({id: req.user.id});
+    async fetchProfile(userId: number) {
+      const userProfile = await this.userRepository.findOne({
+        where: { id: userId },
+        select: ['id', 'firstName', 'lastName', 'email', 'roles']
+      });
 
-    return userProfile;
-  }
+      return userProfile;
+    }
   
   async findAll() {
     return await this.userRepository.find();
