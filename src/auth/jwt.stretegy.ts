@@ -23,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // return the full user object without paassword
     return { 
-    userId: user.id,
+    id: user.id,
     email: user.email,
     firstName: user.firstName, 
     lastName: user.lastName,
