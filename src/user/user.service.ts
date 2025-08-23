@@ -23,7 +23,16 @@ export class UserService {
     }
   }
 
+    async fetchProfile(req: any) {
+    // fetch the admin profile from the database
+    // using the user ID from the request object
+    const adminProfile = await this.adminRepository.findOne({
+      where: { user: { id: req.user.id } },
+      relations: ['user'], // Include user in the response
+    });
 
+    return adminProfile;
+  }
   
   async findAll() {
     return await this.userRepository.find();
