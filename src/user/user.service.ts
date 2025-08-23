@@ -24,7 +24,7 @@ export class UserService {
   }
 
     async fetchProfile(req: any) {
-    const userProfile = await this.userRepository.findOneBy({id: req.id});
+    const userProfile = await this.userRepository.findOneBy({id: req.user.id});
 
     return userProfile;
   }
