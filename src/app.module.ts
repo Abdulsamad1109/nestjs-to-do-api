@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { Todo } from './todo/entities/todo.entity';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { Todo } from './todo/entities/todo.entity';
       })
     }),
   UserModule,
-  TodoModule, AuthModule
+  TodoModule, AuthModule, ProductModule
 ],
   controllers: [AppController],
   providers: [AppService],
